@@ -99,12 +99,6 @@ To mimic realistic fintech data challenges, synthetic issues were intentionally 
 
 ---
 
-# 🏗️ Architecture
-
-![Architecture Diagram](architecture/payflow_architecture.png)
-
----
-
 # 🔄 Medallion Architecture
 
 ## 🥉 Bronze Layer (Raw Data)
@@ -255,13 +249,6 @@ Execution Flow:
         ↓
 04 Gold Marts & KPI Generation
 ```
-
-### Workflow Screenshot
-
-![Databricks Workflow](architecture/databricks_workflow.png)
-
----
-
 # 🛠️ Tech Stack
 
 ### Languages & Libraries
