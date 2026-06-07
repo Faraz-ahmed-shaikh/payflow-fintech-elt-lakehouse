@@ -32,8 +32,7 @@ Instead of building something overengineered, I wanted a **realistic Version 1 P
 The company receives raw transaction data with real-world messiness:
 
 * Duplicate transactions
-* Missing merchant IDs
-* Missing cities & device types
+* Missing merchant IDs, cities & device types
 * Mixed timestamp formats
 * Payment method inconsistencies (`upi`, `UPI`, `CC`, etc.)
 * Currency inconsistencies (`inr`, `INR ₹`, etc.)
@@ -190,6 +189,9 @@ Execution Flow:
 Workflow Screenshot: available in architecture folder
 
 ---
+# 📊 Business Dashboard (Sample Inshigts)
+<img width="800" height="400" alt="dashboard_image" src="https://github.com/user-attachments/assets/5f276751-5fd7-4a99-8aca-c2c0a94b847c" />
+
 
 # 🛠️ Tech Stack
 
@@ -219,6 +221,7 @@ payflow-fintech-elt-lakehouse/
 
 │── notebooks/
 │── source_files/
+|── marts_visualization/ 
 │── data/
 │── architecture/
 └── README.md
