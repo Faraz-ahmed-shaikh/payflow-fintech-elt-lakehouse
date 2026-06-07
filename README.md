@@ -1,44 +1,46 @@
 # 💳 PayFlow Fintech ELT Lakehouse Pipeline
 
-An end-to-end **ELT Lakehouse Project** built for a fictional digital payments & UPI company **PayFlow**, designed to simulate how raw fintech transaction data is transformed into **analytics-ready datasets** using **PySpark, Databricks, Delta Lake, and Medallion Architecture**.
+An end-to-end **ELT Lakehouse Project** built for a fictional digital payments & UPI company called **PayFlow**.
 
-The project demonstrates how modern data systems ingest, clean, transform, enrich, and model payment transaction data into business-ready marts for analysts and BI tools.
+This project was built to understand how raw fintech transaction data moves through a modern data system using **PySpark, Databricks, Delta Lake, and Medallion Architecture**, while keeping things practical and industry-relevant for a beginner-to-intermediate level project.
+
+The goal was simple:
+
+> Build a system that takes messy payment transaction data, stores it efficiently in a centralized Lakehouse, and transforms it into trusted, analytics-ready datasets for Analysts and BI reporting.
 
 ---
 
-# 📌 Project Goal
+# 🚀 Why I Built This
 
-The goal of this project was to build a **realistic Version 1 ELT pipeline** that reflects industry-relevant data engineering workflows without unnecessary enterprise complexity.
+Most of my projects are analytics-focused, but I also wanted to understand:
 
-This project focuses on:
+* How raw data gets ingested
+* How end-to-end data pipelines are built
+* How data is stored and organized efficiently in modern storage systems
+* How data is cleaned and standardized at scale
+* How modern data teams structure datasets for analysts and business reporting
 
-* API-style data ingestion
-* PySpark transformations
-* Databricks Lakehouse
-* Delta Lake fundamentals
-* Bronze → Silver → Gold Medallion Architecture
-* Data cleaning & feature engineering
-* Analytics marts & KPI generation
-* Workflow orchestration using Databricks
+
+Instead of building something overengineered, I wanted a **realistic Version 1 Proof of Concept (POC)** similar to how an actual company might structure a basic fintech ELT workflow.
 
 ---
 
 # 🏢 Business Scenario
 
-**PayFlow** is a fictional digital payments company handling large-scale UPI and digital transactions across India.
+**PayFlow** is a fictional digital payments company processing UPI and digital transactions across India.
 
-The business receives raw payment data containing:
+The company receives raw transaction data with real-world messiness:
 
 * Duplicate transactions
-* Missing values
-* Timestamp inconsistencies
-* Payment method variations
-* Currency inconsistencies
-* Merchant metadata issues
+* Missing merchant IDs
+* Missing cities & device types
+* Mixed timestamp formats
+* Payment method inconsistencies (`upi`, `UPI`, `CC`, etc.)
+* Currency inconsistencies (`inr`, `INR ₹`, etc.)
 
-The objective is to transform unreliable raw data into:
+The challenge:
 
-> **trusted, analytics-ready datasets for Analysts, BI dashboards, and business reporting**
+> Convert unreliable raw data into clean, trusted, analytics-ready tables for business reporting.
 
 ---
 
@@ -46,72 +48,32 @@ The objective is to transform unreliable raw data into:
 
 ### Transactions Dataset
 
-* **301,500 total rows**
+* **301,500 transaction records**
 * **18,000 unique customers**
 * **2,200+ merchants**
-* Date range:
-  **May 2024 → May 2026**
-
-Includes:
-
-* transaction_id
-* customer_id
-* merchant_id
-* amount
-* payment_method
-* transaction_status
-* transaction_timestamp
-* city
-* currency
-* device_type
+* Date Range: **May 2024 → May 2026**
 
 ### Merchant Dataset
 
-* **2,211 rows**
-* Merchant metadata including:
+* **2,211 merchant records**
+* Merchant metadata such as:
 
-  * merchant_name
-  * merchant_category
-  * merchant_tier
-  * merchant_city
-
----
-
-# ⚠️ Simulated Data Quality Issues
-
-To mimic realistic fintech data challenges, synthetic issues were intentionally included:
-
-### Transactions
-
-* Missing merchant IDs
-* Missing cities & device types
-* Duplicate transaction rows
-* Mixed timestamp formats
-* Payment method inconsistencies
-* Currency inconsistencies
-* Null values
-
-### Merchants
-
-* Duplicate merchant records
-* Missing merchant categories
-* Category casing inconsistencies
+  * merchant name
+  * merchant category
+  * merchant tier
+  * merchant city
 
 ---
 
-# 🔄 Medallion Architecture
+# 🏗️ Architecture
 
-## 🥉 Bronze Layer (Raw Data)
+This project follows the **Medallion Architecture** approach:
 
-Raw JSONL datasets are ingested from GitHub using **Python Requests API ingestion** and stored in **Delta format**.
+### 🥉 Bronze Layer → Raw Data
 
-### Bronze Objectives
+Raw JSONL transaction and merchant datasets are ingested from GitHub using Python `requests` and stored as **Delta Tables**.
 
-* Preserve raw data
-* Add ingestion metadata
-* Maintain data lineage
-
-### Metadata Added
+Metadata added:
 
 * `data_source`
 * `layer`
@@ -119,115 +81,90 @@ Raw JSONL datasets are ingested from GitHub using **Python Requests API ingestio
 
 ---
 
-## 🥈 Silver Layer (Clean & Trusted Data)
+### 🥈 Silver Layer → Clean & Trusted Data
 
-The Silver layer standardizes and cleans raw datasets into trusted datasets.
+Raw data is standardized and cleaned using **PySpark transformations**.
 
-### Transactions Cleaning
+Key transformations:
 
-* Column renaming
+**Transactions**
+
 * Duplicate removal
-* Timestamp standardization
+* Timestamp parsing
 * Payment method standardization
 * Currency normalization
 * Missing value handling
-* Data validation checks
+* Data quality validation
 
-### Merchant Cleaning
+**Merchants**
 
-* Duplicate removal
+* Duplicate cleanup
 * Category standardization
-* Missing value handling
-* Merchant metadata cleanup
+* Null handling
 
 ---
 
-## 🥇 Gold Layer (Analytics Ready)
+### 🥇 Gold Layer → Analytics Ready
 
-Silver tables are enriched into analytics-ready datasets.
+Clean datasets are enriched and transformed into business-ready tables.
 
-### Feature Engineering
+Feature engineering includes:
 
-#### Time Features
-
-* transaction_date
-* transaction_hour
-* transaction_day_name
-* transaction_month
-* transaction_quarter
-* transaction_year
-* transaction_week_of_year
-* is_weekend
-
-#### Behavioral Features
-
-* time_segment
-* amount_bucket
-* peak_hour_flag
-
-#### Merchant Enrichment
-
-Transaction data is enriched using merchant metadata through joins.
+* Transaction date & hour
+* Weekend flag
+* Time segment (Morning / Evening / Night)
+* Amount buckets
+* Peak-hour indicators
+* Merchant enrichment
 
 ---
 
 # 📈 Analytics Marts
 
-The following marts were created for downstream analytics and BI consumption.
+To make the data useful for analysts and dashboards, I created business-focused marts:
 
-### 1. Merchant Performance Mart
+### Merchant Performance Mart
 
-Business metrics:
+Tracks:
 
-* Total GMV
-* Success rate
-* Average transaction value
-* Total transactions
-* Unique customers
-* Peak transaction hour
-
----
-
-### 2. Customer Spending Behavior Mart
-
-Behavior metrics:
-
-* Total spend
-* Transaction frequency
-* Favorite payment method
-* Preferred transaction time
-* Weekend transaction ratio
-* Category preference
-
----
-
-### 3. Payment Behavior Mart
-
-Analysis of:
-
-* Payment trends
-* Payment success/failure
-* Time-based payment behavior
-
----
-
-### 4. Transaction Trend Mart
-
-Trend metrics:
-
-* Daily GMV
 * Transaction volume
 * Success rate
+* Gross Merchandise Value
+* Unique customers
+* Average transaction value
+
+### Customer Spending Behavior Mart
+
+Tracks:
+
+* Spending patterns
+* Favorite payment method
+* Preferred transaction time
+* Weekend behavior
+
+### Payment Behavior Mart
+
+Analyzes:
+
+* Payment success/failure patterns
+* Payment method trends
+* Time-based payment behavior
+
+### Transaction Trend Mart
+
+Tracks:
+
+* Daily transaction volume
+* Daily payment value
+* Success trends
 * Peak-hour activity
 
----
+### Executive KPI Table
 
-### 5. Executive KPI Table
-
-High-level business KPIs including:
+High-level business metrics:
 
 * Total Transactions
-* Total GMV
+* Total Payment Value
 * Success Rate
 * Active Customers
 * Active Merchants
@@ -236,40 +173,39 @@ High-level business KPIs including:
 
 # ⚙️ Workflow Orchestration
 
-Pipeline orchestration was implemented using **Databricks Workflows**.
+The full pipeline was orchestrated using **Databricks Workflows**.
 
 Execution Flow:
 
 ```text
 01 Bronze Ingestion
         ↓
-02 Bronze to Silver Transformation
+02 Bronze → Silver Transformation
         ↓
-03 Silver to Gold Transformation
+03 Silver → Gold Transformation
         ↓
-04 Gold Marts & KPI Generation
+04 Gold → Analytics Marts & KPI Generation
 ```
+
+Workflow Screenshot: available in architecture folder
+
+---
+
 # 🛠️ Tech Stack
 
-### Languages & Libraries
+**Languages & Processing**
 
 * Python
 * PySpark
-* SQL
 
-### Data Engineering Tools
+**Data Engineering**
 
 * Databricks
 * Delta Lake
-* Databricks Workflows
-
-### Architecture
-
+* ELT Pipelines
 * Medallion Architecture
-* ELT Pipeline
-* Lakehouse Architecture
 
-### Storage Format
+**Storage**
 
 * JSONL
 * Delta Tables
@@ -282,74 +218,35 @@ Execution Flow:
 payflow-fintech-elt-lakehouse/
 
 │── notebooks/
-│   ├── 01_ingest_transactions_to_bronze.ipynb
-│   ├── 02_bronze_to_silver_transformation.ipynb
-│   ├── 03_silver_to_gold_transformation.ipynb
-│   └── 04_gold_to_marts_tables.ipynb
-│
 │── source_files/
-│   ├── 01_ingest_transactions_to_bronze.py
-│   ├── 02_bronze_to_silver_transformation.py
-│   ├── 03_silver_to_gold_transformation.py
-│   └── 04_gold_to_marts_tables.py
-│
 │── data/
-│   ├── transactions.json
-│   └── merchant_metadata.json
-│
 │── architecture/
-│   ├── payflow_architecture.png
-│   └── databricks_workflow.png
-│
 └── README.md
 ```
 
----
-
-# ❗ Notebook Loading Issue?
-
-GitHub notebooks sometimes take time to load or may fail to render.
-
-If notebooks are not opening:
-
-👉 Please open the **`source_files/`** folder where all notebooks are also provided in **`.py` source format** for faster viewing.
+> GitHub notebooks sometimes fail to render.
+> If notebooks don't open, please check the **`source_files/`** folder where all notebooks are also available as `.py` files for faster viewing.
 
 ---
 
-### Workflow Configuration
+# ⚠️ Limitations
 
-The ELT pipeline was orchestrated using **Databricks Workflows** with dependency-based execution.
-
-Task execution order:
-1. **Bronze Ingestion**
-   Fetch raw transaction and merchant datasets from GitHub and store them in Delta format.
-2. **Bronze → Silver Transformation**
-   Clean, standardize, validate, and prepare trusted datasets.
-3. **Silver → Gold Transformation**
-   Enrich transactions with merchant metadata and generate analytics-ready features.
-4. **Gold → Analytics Marts & KPI Generation**
-   Create business marts and executive KPI tables for downstream analysis.
-
-Pipeline execution follows a sequential dependency chain to ensure downstream layers only run after upstream stages complete successfully.
-
+* This project uses **synthetic fintech data**, so real-world seasonality patterns may not fully exist.
+* This is a **Version 1 Proof of Concept**, so advanced production features like streaming, CDC, incremental loading, rollback logic, and complex exception handling were intentionally kept out of scope.
 
 ---
 
 # 🚀 Skills Demonstrated
 
-* PySpark Transformations
-* Databricks Lakehouse
+* PySpark
+* Databricks
 * Delta Lake
 * ELT Pipelines
 * Medallion Architecture
-* API Ingestion
 * Data Cleaning
 * Feature Engineering
 * Analytics Engineering
 * Workflow Orchestration
 * KPI Modeling
-* Business Analytics
 
----
-
-## ⭐ If you found this project useful, feel free to star the repository.
+⭐ If you found this project interesting, feel free to star the repository.
