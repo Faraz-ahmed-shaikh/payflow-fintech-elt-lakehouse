@@ -189,7 +189,7 @@ Execution Flow:
 Workflow Screenshot: available in architecture folder
 
 ---
-# 📊 Business Dashboard (Sample Inshigts)
+# 📊 Business Dashboard (Sample Insights)
 <img width="800" height="400" alt="dashboard_image" src="https://github.com/user-attachments/assets/5f276751-5fd7-4a99-8aca-c2c0a94b847c" />
 
 
